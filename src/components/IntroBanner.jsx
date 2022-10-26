@@ -8,7 +8,7 @@ const IntroBanner = () => {
   const toRotate = ["Front-end Developer", "UI/UX Designer", "iOS Developer"];
   const [text, setText] = useState("");
   const [delta, setDelta] = useState(300 - Math.random() * 100);
-  const period = 2000;
+  const period = 1500;
 
   useEffect(() => {
     let ticker = setInterval(() => {
@@ -44,13 +44,16 @@ const IntroBanner = () => {
 
   return (
     <section
-      className="grid grid-cols-2 gap-2 w-full pl-10 sm:pl-28 sm:py-2 rounded"
+      className="grid grid-cols-1 md:grid-cols-8 lg:grid-cols-10 gap-2 md:gap-6 lg:gap-10 rounded"
       id="home"
     >
-      <div className="block justify-start text-left">
-        <h1 className=" font-bold">
-          {`Xin Chao! I'm Harry`} <span>{text}</span>
+      <div className="block justify-start text-left col-span-5 p-5 mb-5 md:pl-36">
+        <h1 className="font-bold text-4xl sm:text-5xl py-5">
+          {`Xin Chao! I'm Harry`}
         </h1>
+        <h2 className="font-bold text-4xl sm:text-5xl pb-4">
+          <span>{text}</span>
+        </h2>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
@@ -61,7 +64,11 @@ const IntroBanner = () => {
           culpa qui officia deserunt mollit anim id est laborum
         </p>
       </div>
-      <img src={headerImg} alt="Header Image" className="w-full h-5/6" />
+      <img
+        src={headerImg}
+        alt="Header Image"
+        className="w-full h-5/6 md:col-start-5 md:col-span-4 lg:col-start-6 lg:col-span-5"
+      />
     </section>
   );
 };
