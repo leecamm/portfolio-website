@@ -44,10 +44,10 @@ const IntroBanner = () => {
 
   return (
     <section
-      className="grid grid-cols-1 md:grid-cols-8 lg:grid-cols-10 gap-2 md:gap-6 lg:gap-10 rounded"
+      className="grid grid-cols-1 md:grid-cols-8 lg:grid-cols-10 gap-2 md:gap-6 lg:gap-10 rounded items-center justify-center"
       id="home"
     >
-      <div className="block justify-start text-left col-span-5 p-5 mb-5 md:pl-36">
+      <div className="block justify-start text-left col-span-5 mb-5 p-5 md:pl-36 md:-mt-10">
         <h1 className="font-bold text-4xl sm:text-5xl py-5">
           {`Xin Chao! I'm Harry`}
         </h1>

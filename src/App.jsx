@@ -3,6 +3,7 @@ import "./App.css";
 
 import Navbar from "./components/Navbar";
 import IntroBanner from "./components/IntroBanner";
+import Skills from "./components/Skills";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <Navbar />
         <IntroBanner />
       </section>
+      <Skills />
     </div>
   );
 }
