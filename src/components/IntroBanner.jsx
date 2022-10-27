@@ -49,10 +49,10 @@ const IntroBanner = () => {
     >
       <div className="block justify-start text-left col-span-5 mb-5 p-5 md:pl-36 md:-mt-10">
         <h1 className="font-bold text-4xl sm:text-5xl py-5">
-          {`Xin Chao! I'm Harry`}
+          {`Xin Chào! I'm Harry`}
         </h1>
         <h2 className="font-bold text-4xl sm:text-5xl pb-4">
-          <span>{text}</span>
+          <span>🧑🏼‍💻 {text}</span>
         </h2>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do

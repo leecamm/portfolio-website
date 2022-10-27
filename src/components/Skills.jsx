@@ -39,7 +39,12 @@ const Skills = () => {
             aliquip ex ea commodo consequat.
           </p>
         </div>
-        <Carousel responsive={responsive} infinite={true}>
+        <Carousel
+          responsive={responsive}
+          infinite={true}
+          autoPlay={true}
+          autoPlaySpeed={3000}
+        >
           <div className="">
             <img className="mx-auto w-1/2 h-1/2" src={meter95} alt="react" />
             <h5 className="pt-5 font-semibold">HTML5/CSS3</h5>

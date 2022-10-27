@@ -4,6 +4,7 @@ import "./App.css";
 import Navbar from "./components/Navbar";
 import IntroBanner from "./components/IntroBanner";
 import Skills from "./components/Skills";
+import Projects from "./components/Projects";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <IntroBanner />
       </section>
       <Skills />
+      <Projects />
     </div>
   );
 }
