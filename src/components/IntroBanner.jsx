@@ -44,7 +44,7 @@ const IntroBanner = () => {
 
   return (
     <section
-      className="grid grid-cols-1 md:grid-cols-8 lg:grid-cols-10 gap-2 md:gap-6 lg:gap-10 rounded items-center justify-center"
+      className="banner grid grid-cols-1 md:grid-cols-8 lg:grid-cols-10 gap-2 md:gap-6 lg:gap-10 rounded items-center justify-center "
       id="home"
     >
       <div className="block justify-start text-left col-span-5 mb-5 p-5 md:pl-36 md:-mt-10">
@@ -67,7 +67,7 @@ const IntroBanner = () => {
       <img
         src={headerImg}
         alt="Header Image"
-        className="w-full h-5/6 md:col-start-5 md:col-span-4 lg:col-start-6 lg:col-span-5"
+        className="w-full h-3/4 md:col-start-5 md:col-span-4 lg:col-start-6 lg:col-span-5"
       />
     </section>
   );

@@ -23,8 +23,8 @@ const Skills = () => {
     },
   };
   return (
-    <section className="px-4 py-10 w-full flex justify-center items-center md:px-8 bg-gray-900">
-      <div className=" w-5/6 items-center justify-center mx-auto bg-black p-10 rounded-3xl">
+    <section className="px-4 py-10 w-full flex justify-center items-center md:px-8 bg-[url('../src/assets/gradient.png')] bg-cover">
+      <div className=" w-5/6 items-center justify-center mx-auto bg-black p-10 rounded-3xl lg:-mt-16 xl:-mt-24">
         <div className="w-3/4 mx-auto">
           <h2 className="text-4xl font-bold pb-5">Skills</h2>
           <p className="mb-10">

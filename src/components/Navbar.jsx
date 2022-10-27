@@ -107,7 +107,11 @@ const Navbar = () => {
     //     </div>
     //   </div>
     // </nav>
-    <nav className={scrolled ? "scrolled" : "w-full px-2 sm:px-4 py-5 rounded"}>
+    <nav
+      className={
+        scrolled ? "scrolled" : "w-full px-2 sm:px-4 p-5 xl:-mb-10 rounded"
+      }
+    >
       <div className="justify-between px-4 mx-auto lg:max-w-7xl md:flex md:items-center md:px-8">
         <div>
           <div className="flex items-center justify-between py-3 md:py-5 md:block">

@@ -38,3 +38,22 @@
 .read-the-docs {
   color: #888;
 }
+
+/* BANNER */
+.banner img {
+  animation: updown 3s linear infinite;
+}
+@keyframes updown {
+  0% {
+    transform: translateY(-15px);
+  }
+  50% {
+    transform: translateY(15px);
+  }
+  100% {
+    transform: translateY(-15px);
+  }
+}
+.txt-rotate > .wrap {
+  border-right: 0.08em solid #666;
+}
