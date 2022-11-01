@@ -81,7 +81,7 @@ export default function Example() {
               className={({ selected }) =>
                 classNames(
                   "w-full rounded-full py-2.5 text-sm border-2 font-semibold leading-5 gap-10 text-white",
-                  "ring-white ring-opacity-60",
+                  "ring-gray-200 ring-opacity-60",
                   selected
                     ? "bg-gradient-to-r from-indigo-500 to-purple-500 shadow"
                     : " hover:bg-white/[0.12] hover:text-white"
@@ -97,11 +97,11 @@ export default function Example() {
             <Tab.Panel
               key={idx}
               className={classNames(
-                "rounded-xl bg-gray-900 p-3",
+                "rounded-xl bg-black p-3",
                 "ring-white ring-opacity-60 focus:outline-none"
               )}
             >
-              <div className="grid grid-cols-3 gap-10">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
                 {posts.map((post) => (
                   <div className="border-2 rounded-xl relative">
                     <a

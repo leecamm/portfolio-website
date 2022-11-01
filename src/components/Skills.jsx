@@ -33,10 +33,9 @@ const Skills = () => {
         <div className="w-3/4 mx-auto">
           <h2 className="text-4xl font-bold pb-5">Skills</h2>
           <p className="mb-10">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
+            I had many opportunities to work with many modern technologies in
+            Front-end and Mobile Development. I am also a fast learner and I am
+            always looking for new challenges.
           </p>
         </div>
         <Carousel
