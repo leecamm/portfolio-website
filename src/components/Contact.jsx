@@ -40,7 +40,10 @@ const Contact = () => {
   };
 
   return (
-    <section className="banner grid grid-cols-1 md:grid-cols-8 lg:grid-cols-10 gap-2 md:gap-6 lg:gap-10 rounded items-center justify-center">
+    <section
+      className="banner grid grid-cols-1 md:grid-cols-8 lg:grid-cols-10 gap-2 md:gap-6 lg:gap-10 rounded items-center justify-center"
+      id="contact"
+    >
       <img
         src={contactImg}
         alt="Contact Image"

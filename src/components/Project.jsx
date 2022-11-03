@@ -63,7 +63,7 @@ export default function Example() {
   });
 
   return (
-    <div className="w-full max-w-6xl px-5 py-10 sm:px-0 mx-auto">
+    <div className="w-full max-w-6xl px-5 py-10 sm:px-0 mx-auto" id="projects">
       <div className="w-3/4 mx-auto">
         <h2 className="text-4xl font-bold py-8">Projects</h2>
         <p className="mb-10">
