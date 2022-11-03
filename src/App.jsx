@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar";
 import IntroBanner from "./components/IntroBanner";
 import Skills from "./components/Skills";
 import Project from "./components/Project";
+import Contact from "./components/Contact";
 
 function App() {
   return (
@@ -15,6 +16,9 @@ function App() {
       </section>
       <Skills />
       <Project />
+      <section className="bg-[url('../src/assets/gradient.png')] bg-cover">
+        <Contact />
+      </section>
     </div>
   );
 }

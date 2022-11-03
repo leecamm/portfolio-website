@@ -114,11 +114,11 @@ export default function Example() {
                         src={post.imgUrl}
                         className="inset-0 object-cover bg-center z-0 rounded-xl"
                       ></img>
-                      <div class="opacity-0 hover:opacity-80 hover:rounded-xl absolute duration-300 inset-0 z-10 flex flex-col justify-center items-center bottom-0 left-0 right-0 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500">
-                        <h3 class="text-xl text-white font-semibold">
+                      <div className="opacity-0 hover:opacity-80 hover:rounded-xl absolute duration-300 inset-0 z-10 flex flex-col justify-center items-center bottom-0 left-0 right-0 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500">
+                        <h3 className="text-xl text-white font-semibold">
                           {post.title}
                         </h3>
-                        <p class="mt-2 text-sm text-gray-100">
+                        <p className="mt-2 text-sm text-gray-100">
                           {post.description}
                         </p>
                       </div>
