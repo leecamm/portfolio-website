@@ -35,7 +35,7 @@ const Footer = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src={github} className="h-10 sm:h-12" alt="GitHub Logo" />
+              <img src={github} className="h-8 sm:h-12" alt="GitHub Logo" />
             </a>
           </div>
           <p className="pt-4 text-xs md:text-base">
