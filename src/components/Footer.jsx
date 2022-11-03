@@ -8,7 +8,7 @@ import github from "../assets/github.svg";
 const Footer = () => {
   return (
     <footer>
-      <div className="py-14 flex justify-between items-center px-4 md:px-20">
+      <div className="pt-14 pb-8 flex justify-between items-center px-4 md:px-20">
         <img src={logo} className="mr-3 h-14 sm:h-20" alt="Harry LE Logo" />
         <div className="grid grid-rows-3 text-end">
           <div className="flex items-center gap-5 justify-end">
