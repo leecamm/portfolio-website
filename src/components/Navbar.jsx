@@ -96,11 +96,16 @@ const Navbar = () => {
               <li className="text-gray-50 hover:text-gray-200 text-lg">
                 <a href="#projects">Projects</a>
               </li>
-              <a href="#contact">
-                <button className="text-md px-5 py-3 border border-white rounded-full hover:bg-gradient-to-r from-indigo-500 to-purple-500">
-                  Let's Connect
-                </button>
-              </a>
+              <div>
+                <a href="#contact" className="mt-10">
+                  <button
+                    className="text-md px-5 py-4 border border-white rounded-full hover:bg-gradient-to-r from-indigo-500 to-purple-500"
+                    type="button"
+                  >
+                    Let's Connect
+                  </button>
+                </a>
+              </div>
             </ul>
           </div>
         </div>
