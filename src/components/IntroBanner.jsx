@@ -56,10 +56,10 @@ const IntroBanner = () => {
             <span className="leading-tight">🧑🏼‍💻 {text}</span>
           </h2>
           <p className="pt-5">
-            I am an ICT & Media Design student with ambition, who can carry out
-            complex projects with thoroughness and accuracy. Willing to come up
-            with new ideas and learn new knowledge. Skilled in Front-end
-            Development, Mobile, and UI/UX Design.
+            I am an Front-end Developer and Designer with ambition, who can
+            carry out complex projects with thoroughness and accuracy. Willing
+            to come up with new ideas and learn new knowledge. Skilled in
+            Front-end Development, Mobile, and UI/UX Design.
           </p>
         </div>
         <img
