@@ -98,7 +98,7 @@ const Navbar = () => {
                 <a href="#projects">Projects</a>
               </li>
               <li className="text-gray-50 hover:text-gray-200 text-lg">
-                <a href={myCV}>My CV</a>
+                <a href={myCV} target="_blank">My CV</a>
               </li>
               <div>
                 <a href="#contact" className="mt-10">
