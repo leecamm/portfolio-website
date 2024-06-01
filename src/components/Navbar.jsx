@@ -96,6 +96,9 @@ const Navbar = () => {
               <li className="text-gray-50 hover:text-gray-200 text-lg">
                 <a href="#projects">Projects</a>
               </li>
+              <li className="text-gray-50 hover:text-gray-200 text-lg">
+                <a href="../assets/LeDucHieu_CV-new.pdf">My CV</a>
+              </li>
               <div>
                 <a href="#contact" className="mt-10">
                   <button
