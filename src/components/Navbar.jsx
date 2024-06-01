@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect, useRef } from "react";
 import logo from "../assets/Logo.svg";
+import myCV from "../assets/LeDucHieu_CV-new.pdf";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -97,7 +98,7 @@ const Navbar = () => {
                 <a href="#projects">Projects</a>
               </li>
               <li className="text-gray-50 hover:text-gray-200 text-lg">
-                <a href="../assets/LeDucHieu_CV-new.pdf">My CV</a>
+                <a href={myCV}>My CV</a>
               </li>
               <div>
                 <a href="#contact" className="mt-10">
