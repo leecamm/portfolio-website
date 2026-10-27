@@ -50,9 +50,9 @@ const Contact = () => {
         className="hidden md:block w-full h-3/4 md:col-start-1 md:col-span-4 lg:col-span-5"
       />
       <div className="block justify-start text-left col-span-5 md:col-start-6 mb-5 p-5 pl-10 mx-auto md:mx-0">
-        <h1 className="font-bold text-4xl sm:text-5xl py-5 text-white">
+        <h2 className="font-bold text-4xl sm:text-5xl py-5 text-white">
           {`Get In Touch`}
-        </h1>
+        </h2>
         <form className="w-full max-w-lg pt-5" ref={form} onSubmit={sendEmail}>
           <div className="flex flex-wrap -mx-3 mb-6">
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">

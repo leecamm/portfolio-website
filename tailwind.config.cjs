@@ -3,8 +3,9 @@ module.exports = {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      backgroundImage: {
-        backgroundImg: "url('./src/assets/background.png')",
+      fontFamily: {
+        sans: ["Poppins", "system-ui", "sans-serif"],
+        mono: ['"JetBrains Mono"', "ui-monospace", "monospace"],
       },
     },
   },
