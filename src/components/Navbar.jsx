@@ -4,20 +4,25 @@ import logo from "../assets/Logo.svg";
 import myCV from "../assets/LeDucHieu_CV-new.pdf";
 import { navLinks } from "../data/content";
 
+const focusRing = "focus-visible:outline focus-visible:outline-2 focus-visible:outline-purple-400";
+
 const Navbar = ({ ready }) => {
   const root = useRef();
   const [open, setOpen] = useState(false);
+  const slideRef = useRef();
 
   useGSAP(() => {
     if (!ready) return;
     const mm = gsap.matchMedia();
     mm.add(MOTION.any, () => {
       const slide = gsap.quickTo(root.current, "yPercent", { duration: 0.4, ease: "power3" });
+      slideRef.current = slide;
       ScrollTrigger.create({
         start: 0,
         end: "max",
         onUpdate: (self) => slide(self.direction === 1 && self.scroll() > 120 ? -100 : 0),
       });
+      return () => { slideRef.current = null; };
     });
   }, { dependencies: [ready] });
 
@@ -31,13 +36,13 @@ const Navbar = ({ ready }) => {
   };
 
   return (
-    <nav ref={root} className="fixed inset-x-0 top-0 z-50 bg-black/30 backdrop-blur-md">
+    <nav ref={root} aria-label="Primary" onFocus={() => slideRef.current?.(0)} className="fixed inset-x-0 top-0 z-50 bg-black/30 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between px-6 py-4 md:px-12">
-        <a href="#home" onClick={goTo}>
+        <a href="#home" onClick={goTo} className={focusRing}>
           <img src={logo} className="h-10 sm:h-12" alt="Harry Le, home" />
         </a>
         <button
-          className="p-2 text-gray-200 md:hidden"
+          className={`p-2 text-gray-200 md:hidden ${focusRing}`}
           aria-expanded={open}
           aria-controls="nav-menu"
           aria-label={open ? "Close menu" : "Open menu"}
@@ -53,17 +58,17 @@ const Navbar = ({ ready }) => {
         >
           {navLinks.map((link) => (
             <li key={link.href} className="text-lg text-gray-50 hover:text-gray-200">
-              <a href={link.href} onClick={goTo}>{link.label}</a>
+              <a href={link.href} onClick={goTo} className={focusRing}>{link.label}</a>
             </li>
           ))}
           <li className="text-lg text-gray-50 hover:text-gray-200">
-            <a href={myCV} target="_blank" rel="noopener noreferrer">My CV</a>
+            <a href={myCV} target="_blank" rel="noopener noreferrer" className={focusRing}>My CV</a>
           </li>
           <li>
             <a
               href="#contact"
               onClick={goTo}
-              className="inline-block rounded-full border border-white px-5 py-3 hover:bg-gradient-to-r from-indigo-500 to-purple-500"
+              className={`inline-block rounded-full border border-white px-5 py-3 hover:bg-gradient-to-r from-indigo-500 to-purple-500 ${focusRing}`}
             >
               Let's Connect
             </a>

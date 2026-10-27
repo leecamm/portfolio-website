@@ -26,7 +26,7 @@ export default function MissionControl({ ready }) {
         const tl = gsap.timeline({
           defaults: { ease: "none" },
           scrollTrigger: desktop
-            ? { trigger: root.current, start: "top top", end: "+=300%", pin: true, scrub: 1 }
+            ? { trigger: root.current, start: "top top", end: "+=300%", pin: true, scrub: true } // ScrollSmoother already eases the scroll; scrub:1 on top would lag past the pin release
             : { trigger: root.current, start: "top 70%", end: "bottom 80%", scrub: 1 },
         });
         tl.from(".mission-title", { yPercent: 40, opacity: 0, duration: 0.5 });
@@ -38,7 +38,8 @@ export default function MissionControl({ ready }) {
         });
         tl.from(".mission-status", { opacity: 0, y: 20, duration: 0.3 })
           .from(".mission-glow", { opacity: 0, duration: 0.6 })
-          .fromTo(".mission-rocket", { yPercent: 0 }, { yPercent: -260, rotation: -8, ease: "power2.in", duration: 1 }, "<");
+          .fromTo(".mission-rocket", { yPercent: 0 }, { yPercent: desktop ? -260 : -90, rotation: -8, ease: "power2.in", duration: 1 }, "<")
+          .to({}, { duration: 0.4 }); // short hold so liftoff finishes before the pin lets go
       });
     },
     { scope: root, dependencies: [ready] }
@@ -54,7 +55,7 @@ export default function MissionControl({ ready }) {
           <p className="mt-4 max-w-2xl font-sans text-lg text-gray-300">
             Today I keep the launch pad running: the pipelines, releases and tooling that get code safely into production.
           </p>
-          <ol className="mt-12 grid gap-4 md:grid-cols-4">
+          <ol role="list" className="mt-12 grid gap-4 md:grid-cols-4">
             {pipeline.map((s) => (
               <li key={s.stage} className="mission-stage rounded-2xl border border-white/10 bg-white/[0.03] p-6">
                 <div className="flex items-center gap-3">

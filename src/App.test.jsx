@@ -1,9 +1,8 @@
-import { render, screen, cleanup, within, fireEvent } from "@testing-library/react";
-import { it, expect, afterEach } from "vitest";
+import { render, screen, within, fireEvent } from "@testing-library/react";
+import { it, expect, vi } from "vitest";
+import emailjs from "@emailjs/browser";
 import App from "./App";
-
-// vitest globals are off, so RTL does not auto-cleanup between tests.
-afterEach(cleanup);
+import { tools } from "./data/content";
 
 it("renders the hero greeting as the only h1", () => {
   render(<App />);
@@ -51,7 +50,9 @@ it("renders every section in story order", () => {
 
 it("points every nav anchor at a real section", () => {
   const { container } = render(<App />);
-  for (const a of container.querySelectorAll('nav a[href^="#"]')) {
+  const anchors = [...container.querySelectorAll('nav a[href^="#"]')];
+  expect(anchors.length).toBeGreaterThan(0);
+  for (const a of anchors) {
     expect(container.querySelector(a.getAttribute("href"))).not.toBeNull();
   }
 });
@@ -67,15 +68,17 @@ it("shows ops case studies first and switches tabs", () => {
 
 it("lists each tool once for assistive tech", () => {
   const { container } = render(<App />);
-  const visible = within(container.querySelector("#toolbox"))
-    .getAllByText("Figma")
-    .filter((el) => !el.closest('[aria-hidden="true"]'));
-  expect(visible).toHaveLength(1);
+  const toolbox = within(container.querySelector("#toolbox"));
+  for (const tool of [...tools.build, ...tools.ops]) {
+    const visible = toolbox.getAllByText(tool).filter((el) => !el.closest('[aria-hidden="true"]'));
+    expect(visible, tool).toHaveLength(1);
+  }
 });
 
 it("leaves everything visible with motion off", () => {
   const { container } = render(<App />);
   expect(container.querySelectorAll('[style*="opacity: 0"], [style*="visibility: hidden"]')).toHaveLength(0);
+  expect(container.querySelectorAll('[style*="inset(100%"]')).toHaveLength(0);
   expect(container.textContent).not.toMatch(/coffee/i);
   expect(screen.getByRole("heading", { name: "Let's build something reliable." })).toBeInTheDocument();
 });
@@ -87,4 +90,28 @@ it("keeps the work cards in a real list inside the tabpanel", () => {
   const grid = within(panel).getAllByRole("list")[0];
   expect(grid.parentElement).toBe(panel);
   expect(grid.querySelectorAll(":scope > li")).toHaveLength(5);
+});
+
+it("moves tab focus and selection with the arrow keys (roving tabindex)", () => {
+  render(<App />);
+  const [ops, design] = screen.getAllByRole("tab");
+  expect(ops).toHaveAttribute("tabindex", "0");
+  expect(design).toHaveAttribute("tabindex", "-1");
+  fireEvent.keyDown(ops, { key: "ArrowRight" });
+  expect(design).toHaveAttribute("aria-selected", "true");
+  expect(design).toHaveAttribute("tabindex", "0");
+  expect(design).toHaveFocus();
+  fireEvent.keyDown(design, { key: "Home" });
+  expect(ops).toHaveAttribute("aria-selected", "true");
+});
+
+it("disables the contact submit button while sending", () => {
+  const send = vi.spyOn(emailjs, "sendForm").mockReturnValue(new Promise(() => {}));
+  render(<App />);
+  fireEvent.change(screen.getByLabelText("Email address"), { target: { value: "a@b.co" } });
+  fireEvent.change(screen.getByLabelText("Message"), { target: { value: "hi" } });
+  fireEvent.click(screen.getByRole("button", { name: "Send" }));
+  expect(screen.getByRole("button", { name: "Sending..." })).toBeDisabled();
+  expect(screen.getByRole("status")).toHaveTextContent("Sending");
+  send.mockRestore();
 });

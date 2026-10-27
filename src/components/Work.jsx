@@ -7,6 +7,16 @@ export default function Work({ ready }) {
   const [active, setActive] = useState(workTabs[0].id);
   const tab = workTabs.find((t) => t.id === active);
 
+  // Roving tabindex: arrows/Home/End move focus and (automatically) selection.
+  const onTabKeyDown = (e) => {
+    const i = workTabs.findIndex((t) => t.id === active);
+    const next = { ArrowRight: (i + 1) % workTabs.length, ArrowLeft: (i - 1 + workTabs.length) % workTabs.length, Home: 0, End: workTabs.length - 1 }[e.key];
+    if (next === undefined) return;
+    e.preventDefault();
+    setActive(workTabs[next].id);
+    document.getElementById(`tab-${workTabs[next].id}`)?.focus();
+  };
+
   useGSAP(
     () => {
       if (!ready) return;
@@ -43,8 +53,8 @@ export default function Work({ ready }) {
   );
 
   return (
-    <section id="work" ref={root} className="bg-black px-6 py-32 md:px-12">
-      <div className="mx-auto max-w-7xl text-left">
+    <section id="work" ref={root} className="bg-black py-32">
+      <div className="mx-auto max-w-7xl px-6 text-left md:px-12">
         <h2 className="text-4xl font-bold text-gray-50 sm:text-6xl">Selected work</h2>
         <div role="tablist" aria-label="Work categories" className="mt-10 flex flex-wrap gap-3">
           {workTabs.map((t) => (
@@ -54,8 +64,10 @@ export default function Work({ ready }) {
               id={`tab-${t.id}`}
               aria-selected={t.id === active}
               aria-controls="work-panel"
+              tabIndex={t.id === active ? 0 : -1}
               onClick={() => setActive(t.id)}
-              className={`rounded-full border px-5 py-3 text-lg transition-colors ${
+              onKeyDown={onTabKeyDown}
+              className={`rounded-full border px-5 py-3 text-lg transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-purple-400 ${
                 t.id === active
                   ? "border-transparent bg-gradient-to-r from-indigo-500 to-purple-500 text-white"
                   : "border-white/30 text-gray-200 hover:border-white"
@@ -90,7 +102,7 @@ export default function Work({ ready }) {
             );
             return (
               <li key={item.title} className="work-card rounded-3xl border border-white/10 bg-white/[0.04] p-6">
-                {item.url ? <a href={item.url} target="_blank" rel="noopener noreferrer" className="block">{body}</a> : body}
+                {item.url ? <a href={item.url} target="_blank" rel="noopener noreferrer" className="block rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-purple-400">{body}</a> : body}
               </li>
             );
           })}

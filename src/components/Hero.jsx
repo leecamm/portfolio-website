@@ -10,7 +10,7 @@ export default function Hero() {
     () => {
       const mm = gsap.matchMedia();
       mm.add({ desktop: MOTION.desktop, mobile: MOTION.mobile }, (ctx) => {
-        const split = SplitText.create(".hero-title", { type: "chars", mask: "chars" });
+        const split = SplitText.create(".hero-title", { type: "words, chars", mask: "chars" });
         gsap
           .timeline({ defaults: { ease: "expo.out" } })
           .from(split.chars, { yPercent: 110, stagger: 0.03, duration: 1.2 })
@@ -67,7 +67,7 @@ export default function Hero() {
               {profile.roles.map((role, i) => (
                 <span
                   key={role}
-                  className={`hero-role absolute inset-x-0 top-0 bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent ${i ? "opacity-0" : ""}`}
+                  className={`hero-role absolute inset-x-0 top-0 h-full leading-[1.25em] bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent ${i ? "opacity-0" : ""}`}
                 >
                   {role}
                 </span>
