@@ -1,25 +1,24 @@
 Goal
-Upgrade the portfolio to React 19 + Vite 8 and add a Vitest harness (Task 1 of docs/superpowers/plans/2026-10-27-awwwards-redesign.md).
+GSAP core, content data, smooth-scroll shell (Navbar, Cursor), Hero and About (Task 2 of docs/superpowers/plans/2026-10-27-awwwards-redesign.md).
 
 Acceptance Criteria
 
-- express, cors, nodemailer, @types/react, @types/react-dom removed
-- react/react-dom ^19.3, vite ^8, @vitejs/plugin-react ^6, tailwindcss ^3.4 (not v4)
-- `yarn test` runs Vitest in jsdom with the matchMedia stub; the characterization test passes
-- `yarn build` succeeds
-- Spec says Vite 8
+- src/lib/gsap.js registers ScrollTrigger, ScrollSmoother, SplitText, useGSAP and exports MOTION
+- src/data/content.js holds all copy; content tests pass (no placeholder copy, no invented metrics)
+- Hero (only h1), About, new Navbar and Cursor render; IntroBanner deleted
+- Reduced motion / jsdom: all content visible, nothing hidden
+- `yarn test` and `yarn build` pass
 - Committed on branch `redesign`
 
 Files to touch
 
-- package.json, yarn.lock
-- vite.config.js
-- src/test/setup.js (new)
-- src/App.test.jsx (new)
-- docs/superpowers/specs/2026-10-27-awwwards-redesign-design.md
+- src/lib/gsap.js, src/data/content.js, src/data/content.test.js (new)
+- src/components/Cursor.jsx, Hero.jsx, About.jsx (new); Navbar.jsx, Contact.jsx (h1 to h2 only)
+- src/App.jsx, src/App.css, src/index.css, src/App.test.jsx, index.html, tailwind.config.cjs
+- src/assets/ufo.svg (new); delete src/components/IntroBanner.jsx
 
 Out of scope
 
-- Any GSAP code, content changes, or component edits (Task 2+)
-- Removing @headlessui/react or react-multi-carousel (Task 4)
+- Journey, Mission Control, Work, Toolbox (Tasks 3-4)
+- Removing Skills/Project/Footer or old deps (Task 4)
 - Pushing to GitHub
