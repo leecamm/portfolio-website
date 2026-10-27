@@ -57,7 +57,7 @@ and bouncing arrow, placeholder "coffee" project entries.
 
 ## Architecture
 
-- Stack: React 19, Vite 6, Tailwind 3.4 (stay on v3 so existing classes keep working).
+- Stack: React 19, Vite 8, Tailwind 3.4 (stay on v3 so existing classes keep working).
 - Add `gsap`, `@gsap/react`. Plugins used: ScrollTrigger, ScrollSmoother, SplitText (free since
   GSAP 3.13).
 - Remove unused `express`, `cors`, `nodemailer`, and `react-multi-carousel` (only used by
