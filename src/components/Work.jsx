@@ -65,7 +65,14 @@ export default function Work({ ready }) {
             </button>
           ))}
         </div>
-        <ul id="work-panel" role="tabpanel" aria-labelledby={`tab-${active}`} className="work-grid mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div
+          id="work-panel"
+          role="tabpanel"
+          aria-labelledby={`tab-${active}`}
+          tabIndex={0}
+          className="mt-12 focus-visible:outline focus-visible:outline-2 focus-visible:outline-purple-400"
+        >
+        <ul role="list" className="work-grid grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {tab.items.map((item) => {
             const body = (
               <>
@@ -88,6 +95,7 @@ export default function Work({ ready }) {
             );
           })}
         </ul>
+        </div>
       </div>
     </section>
   );

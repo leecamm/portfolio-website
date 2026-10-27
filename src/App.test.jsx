@@ -79,3 +79,12 @@ it("leaves everything visible with motion off", () => {
   expect(container.textContent).not.toMatch(/coffee/i);
   expect(screen.getByRole("heading", { name: "Let's build something reliable." })).toBeInTheDocument();
 });
+
+it("keeps the work cards in a real list inside the tabpanel", () => {
+  render(<App />);
+  const panel = screen.getByRole("tabpanel");
+  expect(panel).toHaveAttribute("tabindex", "0");
+  const grid = within(panel).getAllByRole("list")[0];
+  expect(grid.parentElement).toBe(panel);
+  expect(grid.querySelectorAll(":scope > li")).toHaveLength(5);
+});

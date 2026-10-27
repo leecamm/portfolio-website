@@ -43,7 +43,7 @@ export default function Toolbox({ ready }) {
               <div key={copy} aria-hidden={copy === 1 || undefined} className={`flex ${copy ? "motion-reduce:hidden" : "motion-reduce:flex-wrap"}`}>
                 {list.map((tool) => (
                   <span key={tool} className="flex items-center whitespace-nowrap text-4xl font-bold sm:text-7xl">
-                    <span className={row ? "font-mono text-transparent [-webkit-text-stroke:1px_#a5b4fc]" : "text-gray-50"}>{tool}</span>
+                    <span className={row ? "text-transparent [-webkit-text-stroke:1px_#a5b4fc]" : "text-gray-50"}>{tool}</span>
                     <span aria-hidden="true" className="mx-6 text-purple-400">✦</span>
                   </span>
                 ))}
