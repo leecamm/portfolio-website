@@ -1,24 +1,22 @@
 Goal
-GSAP core, content data, smooth-scroll shell (Navbar, Cursor), Hero and About (Task 2 of docs/superpowers/plans/2026-10-27-awwwards-redesign.md).
+Work (tabbed cards), Toolbox (marquees) and a new Contact, then delete the legacy sections and deps (Task 4 of docs/superpowers/plans/2026-10-27-awwwards-redesign.md).
 
 Acceptance Criteria
 
-- src/lib/gsap.js registers ScrollTrigger, ScrollSmoother, SplitText, useGSAP and exports MOTION
-- src/data/content.js holds all copy; content tests pass (no placeholder copy, no invented metrics)
-- Hero (only h1), About, new Navbar and Cursor render; IntroBanner deleted
-- Reduced motion / jsdom: all content visible, nothing hidden
-- `yarn test` and `yarn build` pass
+- All 7 sections render in order: home, about, journey, mission, work, toolbox, contact
+- Work tabs switch between Ops / Design & Web / Mobile; Toolbox lists each tool once for assistive tech
+- Project.jsx, Skills.jsx, percentage SVGs, react.svg and deps @headlessui/react, react-multi-carousel removed
+- New ScrollTriggers wait for `ready` (created after ScrollSmoother), like Navbar/About/Journey/Mission
+- `yarn test` and `yarn build` pass; verified in a real browser at desktop, 390px mobile, reduced-motion
 - Committed on branch `redesign`
 
 Files to touch
 
-- src/lib/gsap.js, src/data/content.js, src/data/content.test.js (new)
-- src/components/Cursor.jsx, Hero.jsx, About.jsx (new); Navbar.jsx, Contact.jsx (h1 to h2 only)
-- src/App.jsx, src/App.css, src/index.css, src/App.test.jsx, index.html, tailwind.config.cjs
-- src/assets/ufo.svg (new); delete src/components/IntroBanner.jsx
+- src/components/Work.jsx, Toolbox.jsx (new); Contact.jsx, Footer.jsx
+- src/App.jsx, src/App.test.jsx
+- delete legacy components/assets; package.json, yarn.lock
 
 Out of scope
 
-- Journey, Mission Control, Work, Toolbox (Tasks 3-4)
-- Removing Skills/Project/Footer or old deps (Task 4)
+- Hero title wrap fix, cursor flash, a11y polish (Task 5)
 - Pushing to GitHub
