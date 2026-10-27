@@ -25,7 +25,7 @@ Spec: `docs/superpowers/specs/2026-10-28-launch-sequence-design.md`
 
 ---
 
-### Task A: Performance (images, budget test, Lighthouse baseline)
+### Task 1: Performance (images, budget test, Lighthouse baseline)
 
 **Files:**
 - Create: `src/assets/gradient.webp`, `src/assets/mypixel.webp`, `src/assets/finishmytask.webp`, `src/assets/assets.test.js`
@@ -102,7 +102,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 
 ---
 
-### Task B: Launch-countdown preloader
+### Task 2: Launch-countdown preloader
 
 **Files:**
 - Create: `src/components/Preloader.jsx`, `src/components/Preloader.test.jsx`
@@ -273,7 +273,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 
 ---
 
-### Task C: Mission Control in three.js
+### Task 3: Mission Control in three.js
 
 This is a judgment-heavy task. The interface, integration and acceptance behaviour are fixed; the scene's internals are up to the implementer, within the spec.
 
@@ -392,7 +392,7 @@ return () => {
   - Mobile 390×844: vertical track, readable cards, no horizontal scroll, zero errors.
   - Reduced motion: no canvas rendered or no WebGL context created (check that no `webglcontextcreationerror`/context exists), and the static final state shows.
   - Performance sanity: in desktop Chrome, log `renderer.info` (expose `window.__missionSceneInfo` only when `import.meta.env.DEV`) or check that FPS stays smooth (`requestAnimationFrame` deltas over 2s mostly ≤ 20ms). Confirm the loop stops when scrolled away (rAF count stops increasing).
-  - Lighthouse mobile again, since three loads lazily: the score must stay ≥ the post-Task-A score minus 3.
+  - Lighthouse mobile again, since three loads lazily: the score must stay ≥ the post-Task-1 score minus 3.
   - Fix and re-shoot until clean.
 
 - [ ] **Step 8: Commit**
