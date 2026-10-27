@@ -4,11 +4,12 @@ import logo from "../assets/Logo.svg";
 import myCV from "../assets/LeDucHieu_CV-new.pdf";
 import { navLinks } from "../data/content";
 
-const Navbar = () => {
+const Navbar = ({ ready }) => {
   const root = useRef();
   const [open, setOpen] = useState(false);
 
   useGSAP(() => {
+    if (!ready) return;
     const mm = gsap.matchMedia();
     mm.add(MOTION.any, () => {
       const slide = gsap.quickTo(root.current, "yPercent", { duration: 0.4, ease: "power3" });
@@ -18,7 +19,7 @@ const Navbar = () => {
         onUpdate: (self) => slide(self.direction === 1 && self.scroll() > 120 ? -100 : 0),
       });
     });
-  });
+  }, { dependencies: [ready] });
 
   // With ScrollSmoother active, native anchor jumps skip the smoothed content.
   const goTo = (e) => {

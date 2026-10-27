@@ -2,11 +2,12 @@ import { useRef } from "react";
 import { gsap, SplitText, useGSAP, MOTION } from "../lib/gsap";
 import { profile } from "../data/content";
 
-export default function About() {
+export default function About({ ready }) {
   const root = useRef();
 
   useGSAP(
     () => {
+      if (!ready) return;
       const mm = gsap.matchMedia();
       mm.add(MOTION.any, () => {
         const split = SplitText.create(".about-text", { type: "words" });
@@ -18,7 +19,7 @@ export default function About() {
         });
       });
     },
-    { scope: root }
+    { scope: root, dependencies: [ready] }
   );
 
   return (
