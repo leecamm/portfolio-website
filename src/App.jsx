@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import { gsap, ScrollSmoother, useGSAP, MOTION } from "./lib/gsap";
 
+import Preloader, { shouldShowPreloader } from "./components/Preloader";
 import Navbar from "./components/Navbar";
 import Cursor from "./components/Cursor";
 import Hero from "./components/Hero";
@@ -17,6 +18,7 @@ function App() {
   // Child effects run before this one, so children create their ScrollTriggers only once `ready`
   // flips, which happens after the smoother exists (GSAP wants the smoother created first).
   const [ready, setReady] = useState(false);
+  const [launched, setLaunched] = useState(() => !shouldShowPreloader());
 
   useGSAP(() => {
     const mm = gsap.matchMedia();
@@ -28,12 +30,13 @@ function App() {
 
   return (
     <>
+      {!launched && <Preloader onDone={() => setLaunched(true)} />}
       <Navbar ready={ready} />
       <Cursor />
       <div id="smooth-wrapper">
         <div id="smooth-content">
           <main className="App">
-            <Hero />
+            <Hero launched={launched} />
             <About ready={ready} />
             <Journey ready={ready} />
             <MissionControl ready={ready} />

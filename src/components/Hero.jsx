@@ -3,11 +3,12 @@ import { gsap, SplitText, useGSAP, MOTION } from "../lib/gsap";
 import astronaut from "../assets/astronaut.svg";
 import { profile } from "../data/content";
 
-export default function Hero() {
+export default function Hero({ launched }) {
   const root = useRef();
 
   useGSAP(
     () => {
+      if (!launched) return;
       const mm = gsap.matchMedia();
       mm.add({ desktop: MOTION.desktop, mobile: MOTION.mobile }, (ctx) => {
         const split = SplitText.create(".hero-title", { type: "words, chars", mask: "chars" });
@@ -49,7 +50,7 @@ export default function Hero() {
         return () => window.removeEventListener("pointermove", onMove);
       });
     },
-    { scope: root }
+    { scope: root, dependencies: [launched] }
   );
 
   return (
@@ -59,7 +60,8 @@ export default function Hero() {
       <div data-speed="0.3" className="absolute inset-0">
         <div data-depth="-0.5" className="starfield absolute -inset-[10%]" />
       </div>
-      <div className="relative z-10 mx-auto grid min-h-screen max-w-7xl grid-cols-1 items-center gap-10 px-6 pb-16 pt-32 md:grid-cols-2 md:px-12">
+      {/* hidden (not display:none, so still readable) until the curtain has opened; otherwise the finished hero shows under the curtain and then snaps back to replay its intro */}
+      <div className={`relative z-10 mx-auto grid min-h-screen max-w-7xl grid-cols-1 items-center gap-10 px-6 pb-16 pt-32 md:grid-cols-2 md:px-12 ${launched ? "" : "opacity-0"}`}>
         <div className="text-left">
           <h1 className="hero-title text-5xl font-bold leading-[1.05] text-gray-50 sm:text-7xl">{profile.greeting}</h1>
           <h2 aria-label={profile.roles.join(", ")} className="mt-4 text-3xl font-bold sm:text-5xl">
