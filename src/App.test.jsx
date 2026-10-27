@@ -1,4 +1,4 @@
-import { render, screen, cleanup, within } from "@testing-library/react";
+import { render, screen, cleanup, within, fireEvent } from "@testing-library/react";
 import { it, expect, afterEach } from "vitest";
 import App from "./App";
 
@@ -22,12 +22,6 @@ it("renders the about statement", () => {
   expect(screen.getByText(/people on both ends/)).toBeInTheDocument();
 });
 
-it("has home and about sections", () => {
-  const { container } = render(<App />);
-  const ids = [...container.querySelectorAll("section[id]")].map((s) => s.id);
-  expect(ids).toEqual(expect.arrayContaining(["home", "about"]));
-});
-
 it("shows the four journey steps in order", () => {
   const { container } = render(<App />);
   const steps = within(container.querySelector("#journey")).getAllByRole("listitem");
@@ -46,4 +40,42 @@ it("runs the mission control pipeline", () => {
   for (const stage of ["build", "test", "release", "deploy"]) {
     expect(mission.getByText(stage)).toBeInTheDocument();
   }
+});
+
+const SECTIONS = ["home", "about", "journey", "mission", "work", "toolbox", "contact"];
+
+it("renders every section in story order", () => {
+  const { container } = render(<App />);
+  expect([...container.querySelectorAll("section[id]")].map((s) => s.id)).toEqual(SECTIONS);
+});
+
+it("points every nav anchor at a real section", () => {
+  const { container } = render(<App />);
+  for (const a of container.querySelectorAll('nav a[href^="#"]')) {
+    expect(container.querySelector(a.getAttribute("href"))).not.toBeNull();
+  }
+});
+
+it("shows ops case studies first and switches tabs", () => {
+  render(<App />);
+  expect(screen.getByRole("tab", { name: "Ops" })).toHaveAttribute("aria-selected", "true");
+  expect(screen.getByText("Maintaining GitLab CI/CD")).toBeInTheDocument();
+  fireEvent.click(screen.getByRole("tab", { name: "Design & Web" }));
+  expect(screen.getByText("Pomodoro Web App")).toBeInTheDocument();
+  expect(screen.queryByText("Maintaining GitLab CI/CD")).toBeNull();
+});
+
+it("lists each tool once for assistive tech", () => {
+  const { container } = render(<App />);
+  const visible = within(container.querySelector("#toolbox"))
+    .getAllByText("Figma")
+    .filter((el) => !el.closest('[aria-hidden="true"]'));
+  expect(visible).toHaveLength(1);
+});
+
+it("leaves everything visible with motion off", () => {
+  const { container } = render(<App />);
+  expect(container.querySelectorAll('[style*="opacity: 0"], [style*="visibility: hidden"]')).toHaveLength(0);
+  expect(container.textContent).not.toMatch(/coffee/i);
+  expect(screen.getByRole("heading", { name: "Let's build something reliable." })).toBeInTheDocument();
 });

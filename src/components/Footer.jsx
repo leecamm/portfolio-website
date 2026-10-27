@@ -50,7 +50,7 @@ const Footer = () => {
             on Freepik
           </p>
           <p className="text-sm md:text-base">
-            Copyright 2022 by Harry Le. All Rights Reserved
+            Copyright {new Date().getFullYear()} by Harry Le. All Rights Reserved
           </p>
         </div>
       </div>

@@ -8,6 +8,8 @@ import Hero from "./components/Hero";
 import About from "./components/About";
 import Journey from "./components/Journey";
 import MissionControl from "./components/MissionControl";
+import Work from "./components/Work";
+import Toolbox from "./components/Toolbox";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 
@@ -35,8 +37,10 @@ function App() {
             <About ready={ready} />
             <Journey ready={ready} />
             <MissionControl ready={ready} />
+            <Work ready={ready} />
+            <Toolbox ready={ready} />
             <div className="bg-[url('../src/assets/gradient.png')] bg-cover">
-              <Contact />
+              <Contact ready={ready} />
               <Footer />
             </div>
           </main>
