@@ -1,4 +1,4 @@
-import { render, screen, cleanup } from "@testing-library/react";
+import { render, screen, cleanup, within } from "@testing-library/react";
 import { it, expect, afterEach } from "vitest";
 import App from "./App";
 
@@ -26,4 +26,24 @@ it("has home and about sections", () => {
   const { container } = render(<App />);
   const ids = [...container.querySelectorAll("section[id]")].map((s) => s.id);
   expect(ids).toEqual(expect.arrayContaining(["home", "about"]));
+});
+
+it("shows the four journey steps in order", () => {
+  const { container } = render(<App />);
+  const steps = within(container.querySelector("#journey")).getAllByRole("listitem");
+  expect(steps.map((s) => s.querySelector("h3").textContent)).toEqual([
+    "ICT & Media Design",
+    "Frontend Developer",
+    "iOS Developer",
+    "DevOps Engineer",
+  ]);
+});
+
+it("runs the mission control pipeline", () => {
+  const { container } = render(<App />);
+  const mission = within(container.querySelector("#mission"));
+  expect(mission.getByRole("heading", { name: "Mission control" })).toBeInTheDocument();
+  for (const stage of ["build", "test", "release", "deploy"]) {
+    expect(mission.getByText(stage)).toBeInTheDocument();
+  }
 });
