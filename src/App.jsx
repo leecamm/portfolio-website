@@ -39,7 +39,7 @@ function App() {
             <MissionControl ready={ready} />
             <Work ready={ready} />
             <Toolbox ready={ready} />
-            <div className="bg-[url('../src/assets/gradient.png')] bg-cover">
+            <div className="bg-[url('../src/assets/gradient.webp')] bg-cover">
               <Contact ready={ready} />
               <Footer />
             </div>

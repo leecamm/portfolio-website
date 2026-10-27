@@ -1,5 +1,5 @@
-import pomodoroImg from "../assets/finishmytask.png";
-import myPixelImg from "../assets/mypixel.png";
+import pomodoroImg from "../assets/finishmytask.webp";
+import myPixelImg from "../assets/mypixel.webp";
 
 // Copy is drafted from Harry's LinkedIn. Add real metrics here only when Harry supplies them.
 export const profile = {

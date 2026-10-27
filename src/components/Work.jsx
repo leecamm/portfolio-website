@@ -95,7 +95,7 @@ export default function Work({ ready }) {
           {tab.items.map((item) => {
             const body = (
               <>
-                {item.image && <img src={item.image} alt="" className="aspect-video w-full rounded-2xl object-cover" />}
+                {item.image && <img src={item.image} alt="" loading="lazy" decoding="async" width={1200} height={675} className="aspect-video w-full rounded-2xl object-cover" />}
                 <h3 className="mt-6 text-2xl font-bold text-gray-50">{item.title}</h3>
                 <p className="mt-3 text-gray-300">{item.description}</p>
                 {item.tags && (
