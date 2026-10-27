@@ -1,11 +1,18 @@
-import { useRef, useState } from "react";
-import { gsap, useGSAP, MOTION } from "../lib/gsap";
+import { useEffect, useRef, useState } from "react";
+import { gsap, ScrollTrigger, useGSAP, MOTION } from "../lib/gsap";
 import { workTabs } from "../data/content";
 
 export default function Work({ ready }) {
   const root = useRef();
   const [active, setActive] = useState(workTabs[0].id);
   const tab = workTabs.find((t) => t.id === active);
+
+  // Switching tabs changes the page height, but a non-pin ScrollTrigger only refreshes itself.
+  // Without this, triggers below Work (Contact heading) keep start positions from the old height.
+  // useGSAP rebuilds Work's own triggers in a layout effect, which runs before this effect.
+  useEffect(() => {
+    if (ready) ScrollTrigger.refresh();
+  }, [active, ready]);
 
   // Roving tabindex: arrows/Home/End move focus and (automatically) selection.
   const onTabKeyDown = (e) => {

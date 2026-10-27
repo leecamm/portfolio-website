@@ -13,7 +13,7 @@ export default function Hero() {
         const split = SplitText.create(".hero-title", { type: "words, chars", mask: "chars" });
         gsap
           .timeline({ defaults: { ease: "expo.out" } })
-          .from(split.chars, { yPercent: 110, stagger: 0.03, duration: 1.2 })
+          .from(split.chars, { yPercent: 110, stagger: 0.03, duration: 1.2, onComplete: () => split.revert() }) // the mask clips descenders ("y"), so drop it once the reveal is done
           .from(".hero-copy", { y: 24, opacity: 0, duration: 1 }, "-=0.8")
           .from(".hero-astronaut", { scale: 0.85, opacity: 0, duration: 1.4 }, "<");
 

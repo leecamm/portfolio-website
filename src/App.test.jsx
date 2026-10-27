@@ -1,8 +1,9 @@
-import { render, screen, within, fireEvent } from "@testing-library/react";
+import { render, screen, within, fireEvent, act } from "@testing-library/react";
 import { it, expect, vi } from "vitest";
 import emailjs from "@emailjs/browser";
 import App from "./App";
 import { tools } from "./data/content";
+import { ScrollTrigger } from "./lib/gsap";
 
 it("renders the hero greeting as the only h1", () => {
   render(<App />);
@@ -111,7 +112,18 @@ it("disables the contact submit button while sending", () => {
   fireEvent.change(screen.getByLabelText("Email address"), { target: { value: "a@b.co" } });
   fireEvent.change(screen.getByLabelText("Message"), { target: { value: "hi" } });
   fireEvent.click(screen.getByRole("button", { name: "Send" }));
+  expect(send).toHaveBeenCalledWith("service_2uhn9y9", "template_ebuf4pd", expect.any(HTMLFormElement), "G-DHKLQCXzx8Z5wO6");
   expect(screen.getByRole("button", { name: "Sending..." })).toBeDisabled();
   expect(screen.getByRole("status")).toHaveTextContent("Sending");
   send.mockRestore();
+});
+
+it("refreshes every scroll trigger when the work tab changes the page height", async () => {
+  const refresh = vi.spyOn(ScrollTrigger, "refresh");
+  render(<App />);
+  await act(async () => {}); // let the smoother-ready flag flip and settle
+  refresh.mockClear();
+  fireEvent.click(screen.getByRole("tab", { name: "Mobile" }));
+  expect(refresh).toHaveBeenCalled();
+  refresh.mockRestore();
 });

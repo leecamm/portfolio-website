@@ -18,7 +18,7 @@ const Contact = ({ ready }) => {
       const mm = gsap.matchMedia();
       mm.add(MOTION.any, () => {
         const split = SplitText.create(".contact-title", { type: "words", mask: "words" });
-        gsap.from(split.words, { yPercent: 110, stagger: 0.08, duration: 1, ease: "expo.out", scrollTrigger: { trigger: ".contact-title", start: "top 85%" } });
+        gsap.from(split.words, { yPercent: 110, stagger: 0.08, duration: 1, ease: "expo.out", scrollTrigger: { trigger: ".contact-title", start: "top 85%" }, onComplete: () => split.revert() }); // drop the mask so descenders are not clipped
       });
       mm.add(MOTION.desktop, () => {
         const btn = root.current.querySelector(".magnetic");
@@ -47,7 +47,7 @@ const Contact = ({ ready }) => {
     setStatus("Sending your message...");
     emailjs.sendForm("service_2uhn9y9", "template_ebuf4pd", form.current, "G-DHKLQCXzx8Z5wO6").then(
       () => {
-        alert("Message sent, We'll contact you shortly");
+        alert("Message sent, I'll get back to you shortly");
         setStatus("Message sent. I'll get back to you shortly.");
         setButtonText("Send");
         form.current.reset();
