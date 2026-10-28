@@ -127,3 +127,11 @@ it("refreshes every scroll trigger when the work tab changes the page height", a
   expect(refresh).toHaveBeenCalled();
   refresh.mockRestore();
 });
+
+it("keeps mission control readable without WebGL", () => {
+  const { container } = render(<App />);
+  const mission = container.querySelector("#mission");
+  expect(mission.querySelectorAll(".mission-stage")).toHaveLength(4);
+  expect(within(mission).getByText("✓ deployed. all systems nominal.")).toBeInTheDocument();
+  expect(mission.querySelector(".mission-rocket")).not.toBeNull(); // 2D fallback present
+});

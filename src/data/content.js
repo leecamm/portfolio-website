@@ -33,6 +33,10 @@ export const pipeline = [
   { stage: "deploy", log: "rolling out · health checks passing" },
 ];
 
+// Mission control sync points: the rocket reaches stage i at stageAt[i] of the pinned timeline,
+// and lifts off at liftoffAt. Shared by the DOM timeline and the (lazy) three.js scene.
+export const missionTiming = { stageAt: [0.12, 0.3, 0.48, 0.66], liftoffAt: 0.75 };
+
 export const caseStudies = [
   { title: "Maintaining GitLab CI/CD", description: "Keeping the pipelines teams depend on fast, readable and dependable, so a red build always explains itself.", tags: ["GitLab CI/CD", "YAML"] },
   { title: "Release & deployment", description: "Owning the path from merge to production: versioned releases and repeatable deployments that nobody has to babysit.", tags: ["Releases", "Deployments"] },
