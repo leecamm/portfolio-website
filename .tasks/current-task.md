@@ -1,20 +1,19 @@
 Goal
-Polish pass and full visual verification of the redesigned portfolio (Task 5 of docs/superpowers/plans/2026-10-27-awwwards-redesign.md).
+Launch sequence: performance pass, launch-countdown preloader, three.js Mission Control (docs/superpowers/plans/2026-10-28-launch-sequence.md, Tasks 1-3).
 
 Acceptance Criteria
 
-- Hero greeting no longer breaks mid-word; UFO cursor doesn't show in the corner before first pointer move
-- Deferred minors from Tasks 2-4 triaged: fix the cheap, valuable ones; list the rest as known
-- Screenshot passes at 1440x900, 390x844, and reduced-motion with zero console errors; every frame inspected
-- Keyboard pass: visible focus on nav, tabs, cards, form fields
-- `yarn test` and `yarn build` pass
+- Heavy images converted to webp; every image asset <= 300KB (budget test); Lighthouse before/after recorded
+- Preloader: countdown, real-readiness wait (1.6s min, 4s cap), skip on click/Esc, once per session, none under reduced motion; hero intro starts on curtain open
+- Mission Control: three.js rocket rides the pipeline track, liftoff with warp, lazy-loaded chunk, HTML fallback when no WebGL or reduced motion
+- `yarn test` and `yarn build` pass; verified in real Chrome (desktop, 390px, reduced motion)
 - Committed on branch `redesign`
 
 Files to touch
 
-- Only files where defects are found (src/components/*, src/App.css, src/App.test.jsx)
+- See plan per task
 
 Out of scope
 
-- New features, copy changes, new sections
+- Case-study pages, page transitions, sound, R3F, GLB models, bloom
 - Pushing to GitHub
