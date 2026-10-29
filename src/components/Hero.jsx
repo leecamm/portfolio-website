@@ -19,19 +19,16 @@ export default function Hero({ launched }) {
           .from(".hero-astronaut", { scale: 0.85, opacity: 0, duration: 1.4 }, "<");
 
         // Role rotator: each role slides out the top while the next slides in from below.
+        // Both tweens share start, duration and ease, so they stay exactly one box apart and never overlap.
         const roles = gsap.utils.toArray(".hero-role", root.current);
         gsap.set(roles, { opacity: 1, yPercent: 100 });
         gsap.set(roles[0], { yPercent: 0 });
+        const swap = { duration: 0.6, ease: "power3.inOut" };
         const loop = gsap.timeline({ repeat: -1, delay: 1.5 });
         roles.forEach((role, i) => {
           loop
-            .to(role, { yPercent: -100, duration: 0.6, ease: "power3.in" }, "+=1.8")
-            .fromTo(
-              roles[(i + 1) % roles.length],
-              { yPercent: 100 },
-              { yPercent: 0, duration: 0.6, ease: "power3.out", immediateRender: false },
-              "<0.15"
-            );
+            .to(role, { yPercent: -100, ...swap }, "+=1.8")
+            .fromTo(roles[(i + 1) % roles.length], { yPercent: 100 }, { yPercent: 0, ...swap, immediateRender: false }, "<");
         });
 
         if (!ctx.conditions.desktop) return;
