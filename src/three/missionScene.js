@@ -204,18 +204,19 @@ function layoutPoints(w, h, mobile) {
   if (mobile) {
     const x = w - 44;
     return [
-      [w - 16, -50, 0], // enters from above, along the margin past the copy
+      [x - 10, h * 0.25, 0], // starts below the intro copy, beside the first card
       [x - 5, h * 0.31, 0.2],
       [x + 5, h * 0.435, -0.2],
       [x - 5, h * 0.56, 0.2],
       [x + 3, h * 0.685, 0],
-      [x - 22, h * 0.86, 0.1],
+      [x - 6, h * 0.855, 0.1], // the track hooks left into the pad,
+      [x - 80, h * 0.84, 0.1], // so liftoff pitches up ~80 degrees instead of flipping over
     ];
   }
   const contentW = Math.min(w, 1152) - 96;
   const left = (w - contentW) / 2;
   const col = (contentW - 48) / 4;
-  const y = h * 0.8;
+  const y = Math.max(h * 0.8, h / 2 + 270); // below the centred copy, cards and status line, even on short screens
   const cx = (i) => left + col * (i + 0.5) + 16 * i;
   return [
     [Math.max(40, left - 120), y + 26, -0.4],
@@ -227,12 +228,29 @@ function layoutPoints(w, h, mobile) {
   ];
 }
 
-export function createMissionScene(canvas, { mobile = false } = {}) {
-  const ppu = mobile ? 64 : 100; // pixels per world unit on the track plane (z = 0)
-  const disposables = new Set();
+// options.onLost: called if the WebGL context is lost and not restored within LOST_MS.
+export function createMissionScene(canvas, options = {}) {
+  const built = { renderer: null, disposables: new Set() };
+  try {
+    return buildMissionScene(canvas, options, built);
+  } catch (err) {
+    // a half-built scene must not keep the context: free what exists, then let the caller fall back
+    for (const d of built.disposables) d.dispose();
+    built.renderer?.dispose();
+    built.renderer?.forceContextLoss();
+    throw err;
+  }
+}
+
+const LOST_MS = 2000;
+
+function buildMissionScene(canvas, { mobile = false, onLost } = {}, built) {
+  let ppu = 100; // pixels per world unit on the track plane (z = 0); set per layout
+  const disposables = built.disposables;
   const own = (x) => (disposables.add(x), x);
 
-  const renderer = new WebGLRenderer({ canvas, antialias: !mobile, alpha: true, powerPreference: "high-performance" });
+  // a decorative scene: let the browser pick the GPU (no forced switch to a discrete one)
+  const renderer = (built.renderer = new WebGLRenderer({ canvas, antialias: !mobile, alpha: true, powerPreference: "default" }));
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 2));
   renderer.outputColorSpace = SRGBColorSpace;
   renderer.toneMapping = ACESFilmicToneMapping;
@@ -499,10 +517,13 @@ export function createMissionScene(canvas, { mobile = false } = {}) {
   let width = 0;
   let height = 0;
   function layout(w, h) {
+    ppu = mobile ? 64 : MathUtils.clamp(w / 14.4, 76, 100); // a smaller rocket beside narrower cards
     const pts = layoutPoints(w, h, mobile).map(([x, y, z]) => new Vector3((x - w / 2) / ppu, (h / 2 - y) / ppu, z));
     curve = new CatmullRomCurve3(pts, false, "centripetal");
-    const lengths = curve.getLengths(250); // 6 points: control point i sits at t = i / 5, i.e. index 50 i
-    knotsU = pts.map((_, i) => lengths[i * 50] / lengths[250]);
+    // control point i sits at t = i / (n - 1), i.e. lengths index 50 i; nodes are points 1-4, the pad is last
+    const div = 50 * (pts.length - 1);
+    const lengths = curve.getLengths(div);
+    knotsU = [0, ...[1, 2, 3, 4].map((i) => lengths[i * 50] / lengths[div]), 1];
 
     trackCore.geometry.dispose();
     trackGlow.geometry.dispose();
@@ -514,7 +535,7 @@ export function createMissionScene(canvas, { mobile = false } = {}) {
     indexPerSegment = 8 * 6;
 
     nodes.forEach((n, i) => n.group.position.copy(pts[i + 1]));
-    pad.copy(pts[5]);
+    pad.copy(pts[pts.length - 1]);
     const tan = curve.getTangentAt(1);
     padAngle = wrapAngle(Math.atan2(tan.y, tan.x) - Math.PI / 2);
     padFlash.position.copy(pad);
@@ -704,6 +725,7 @@ export function createMissionScene(canvas, { mobile = false } = {}) {
     if (Math.abs(target - current) < 1e-5) current = target;
     const vel = Math.abs(current - prev) / dt;
     activity += (Math.min(vel * 6, 1) - activity) * (1 - Math.exp(-dt * 4));
+    if (!curve) return; // no valid layout yet (zero-size canvas): nothing to draw
     update(dt);
     renderer.render(scene, camera);
   }
@@ -717,9 +739,22 @@ export function createMissionScene(canvas, { mobile = false } = {}) {
     }
   };
   const onVisibility = () => loop(running && !document.hidden);
+  // A lost context usually comes back (three rebuilds its GPU state); if it doesn't, tell the caller.
+  let lostTimer = 0;
+  const onContextLost = (e) => {
+    e.preventDefault(); // allow the browser to restore it
+    clearTimeout(lostTimer);
+    lostTimer = setTimeout(() => onLost?.(), LOST_MS);
+  };
+  const onContextRestored = () => clearTimeout(lostTimer);
+  resize(); // listeners go on only after the first layout, so a throw above leaks none
+  // The panel can change height without a window resize (fonts, wrapping), so watch the canvas itself.
+  const ro = typeof ResizeObserver === "function" ? new ResizeObserver(() => resize()) : null;
   document.addEventListener("visibilitychange", onVisibility);
-  window.addEventListener("resize", resize);
-  resize();
+  canvas.addEventListener("webglcontextlost", onContextLost);
+  canvas.addEventListener("webglcontextrestored", onContextRestored);
+  if (ro) ro.observe(canvas);
+  else window.addEventListener("resize", resize);
 
   if (import.meta.env.DEV) window.__missionSceneInfo = renderer.info;
 
@@ -747,7 +782,11 @@ export function createMissionScene(canvas, { mobile = false } = {}) {
       running = false;
       loop(false);
       document.removeEventListener("visibilitychange", onVisibility);
-      window.removeEventListener("resize", resize);
+      canvas.removeEventListener("webglcontextlost", onContextLost);
+      canvas.removeEventListener("webglcontextrestored", onContextRestored);
+      clearTimeout(lostTimer);
+      if (ro) ro.disconnect();
+      else window.removeEventListener("resize", resize);
       trackCore.geometry.dispose();
       trackGlow.geometry.dispose();
       route.geometry.dispose();

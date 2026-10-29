@@ -73,16 +73,30 @@ export default function MissionControl({ ready }) {
           onEnter: () => {
             import("../three/missionScene").then(({ createMissionScene, supportsWebGL }) => {
               if (!supportsWebGL()) return;
+              // The context was lost for good (not restored): drop back to the 2D version.
+              const onLost = () => {
+                console.debug("mission control: WebGL context lost, showing the 2D version");
+                sceneRef.current?.dispose();
+                sceneRef.current = null;
+                setHas3d(false);
+              };
+              let rekeyed = false;
               const mount = () => {
                 const canvas = canvasRef.current;
                 if (disposed || !canvas) return;
-                if (spentCanvases.has(canvas)) return requestAnimationFrame(mount); // React is still swapping in a fresh one
-                spentCanvases.add(canvas);
+                if (spentCanvases.has(canvas)) {
+                  // its context is gone for good: ask React for a fresh <canvas> (once), then retry
+                  if (!rekeyed) setCanvasKey((k) => k + 1);
+                  rekeyed = true;
+                  return requestAnimationFrame(mount);
+                }
+                spentCanvases.add(canvas); // even a failed create may have used up the context
                 let scene;
                 try {
-                  scene = createMissionScene(canvas, { mobile: !desktop });
-                } catch {
-                  return; // no usable GPU context: the 2D version stays
+                  scene = createMissionScene(canvas, { mobile: !desktop, onLost });
+                } catch (err) {
+                  console.debug("mission control: no 3D scene, keeping the 2D version", err);
+                  return;
                 }
                 sceneRef.current = scene;
                 scene.setProgress(state.p);
@@ -90,7 +104,7 @@ export default function MissionControl({ ready }) {
                 setHas3d(true);
               };
               mount();
-            }).catch(() => {}); // chunk failed to load: the 2D version stays
+            }).catch((err) => console.debug("mission control: 3D chunk failed to load, keeping the 2D version", err));
           },
         });
         const onPointer = (e) => sceneRef.current?.setPointer(e.clientX / innerWidth - 0.5, e.clientY / innerHeight - 0.5);
@@ -99,11 +113,8 @@ export default function MissionControl({ ready }) {
         return () => {
           disposed = true;
           window.removeEventListener("pointermove", onPointer);
-          if (sceneRef.current) {
-            sceneRef.current.dispose();
-            sceneRef.current = null;
-            setCanvasKey((k) => k + 1);
-          }
+          sceneRef.current?.dispose(); // its canvas is now spent; the next mount swaps in a fresh one
+          sceneRef.current = null;
           setHas3d(false);
         };
       });

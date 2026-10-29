@@ -133,5 +133,11 @@ it("keeps mission control readable without WebGL", () => {
   const mission = container.querySelector("#mission");
   expect(mission.querySelectorAll(".mission-stage")).toHaveLength(4);
   expect(within(mission).getByText("✓ deployed. all systems nominal.")).toBeInTheDocument();
-  expect(mission.querySelector(".mission-rocket")).not.toBeNull(); // 2D fallback present
+  // the canvas is decorative only, and without WebGL the 2D fallback stays visible
+  for (const canvas of mission.querySelectorAll("canvas")) expect(canvas).toHaveAttribute("aria-hidden", "true");
+  for (const fallback of [".mission-rocket", ".mission-glow"]) {
+    const el = mission.querySelector(fallback);
+    expect(el, fallback).not.toBeNull();
+    expect(el.closest(".opacity-0"), fallback).toBeNull();
+  }
 });

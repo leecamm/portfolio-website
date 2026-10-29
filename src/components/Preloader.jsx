@@ -23,49 +23,81 @@ export default function Preloader({ onDone }) {
   const root = useRef();
 
   useGSAP(
-    () => {
+    (context, contextSafe) => {
+      const el = root.current;
       const html = document.documentElement;
+      const prevOverflow = html.style.overflow;
       html.style.overflow = "hidden"; // ScrollSmoother rides native scroll, so this locks it too
+      // Keep Tab and assistive tech out of the hidden page (nav, content) while the curtain is up.
+      const behind = [...el.parentElement.children].filter((c) => c !== el && !c.hasAttribute("inert"));
+      behind.forEach((c) => c.setAttribute("inert", ""));
+      let released = false;
+      const release = () => {
+        if (released) return;
+        released = true;
+        html.style.overflow = prevOverflow;
+        behind.forEach((c) => c.removeAttribute("inert"));
+      };
 
       const count = gsap.timeline();
-      gsap.utils.toArray(".preloader-beat", root.current).forEach((beat) => {
+      gsap.utils.toArray(".preloader-beat", el).forEach((beat) => {
         count
           .fromTo(beat, { scale: 1.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25, ease: "power3.out" })
           .to(beat, { opacity: 0, duration: 0.2 }, "+=0.2");
       });
 
+      // `alive` stops a torn-down run (StrictMode's simulated remount, or unmount) from finishing.
+      let alive = true;
       let finished = false;
-      const finish = () => {
-        if (finished || !root.current) return;
+      const finish = contextSafe(() => {
+        if (!alive || finished) return;
         finished = true;
         count.progress(1);
-        gsap.to(root.current, {
-          clipPath: "inset(0% 0% 100% 0%)",
-          duration: 0.9,
-          ease: "expo.inOut",
-          onComplete: () => {
-            html.style.overflow = "";
-            try {
-              sessionStorage.setItem("launched", "1");
-            } catch {
-              /* storage blocked: the countdown just plays again next time */
-            }
-            ScrollTrigger.refresh();
-            onDone();
-          },
-        });
-      };
+        gsap.fromTo(
+          el,
+          { clipPath: "inset(0% 0% 0% 0%)" },
+          {
+            clipPath: "inset(0% 0% 100% 0%)",
+            duration: 0.9,
+            ease: "expo.inOut",
+            onComplete: () => {
+              if (!alive) return;
+              release();
+              try {
+                sessionStorage.setItem("launched", "1");
+              } catch {
+                /* storage blocked: the countdown just plays again next time */
+              }
+              onDone(); // first, so the hero never stays hidden if the refresh below throws
+              try {
+                ScrollTrigger.refresh();
+              } catch (err) {
+                console.debug("preloader: ScrollTrigger.refresh failed", err);
+              }
+            },
+          }
+        );
+      });
 
-      Promise.all([document.fonts?.ready ?? Promise.resolve(), pageLoaded(), new Promise((r) => setTimeout(r, MIN_MS))]).then(finish);
+      let minTimer;
+      const minWait = new Promise((r) => (minTimer = setTimeout(r, MIN_MS)));
+      Promise.all([document.fonts?.ready ?? Promise.resolve(), pageLoaded(), minWait]).then(finish);
       const cap = setTimeout(finish, MAX_MS);
-      const onKey = (e) => ["Escape", "Enter", " "].includes(e.key) && finish();
+      const onKey = (e) => {
+        if (e.ctrlKey || e.metaKey || e.altKey || !["Escape", "Enter", " "].includes(e.key)) return;
+        if (e.key !== "Escape") e.preventDefault(); // Space would scroll, Enter could activate something
+        finish();
+      };
       window.addEventListener("keydown", onKey);
-      root.current.addEventListener("click", finish);
+      el.addEventListener("click", finish);
 
       return () => {
+        alive = false;
         clearTimeout(cap);
+        clearTimeout(minTimer);
         window.removeEventListener("keydown", onKey);
-        html.style.overflow = "";
+        el.removeEventListener("click", finish);
+        release();
       };
     },
     { scope: root }
