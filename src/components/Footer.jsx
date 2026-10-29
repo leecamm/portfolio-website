@@ -8,7 +8,7 @@ import github from "../assets/github.svg";
 const Footer = () => {
   return (
     <footer>
-      <div className="pt-14 pb-8 flex justify-between items-center px-4 md:px-20">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 pb-8 pt-14 md:px-12">
         <img src={logo} className="mr-3 h-14 sm:h-20" alt="Harry LE Logo" />
         <div className="grid grid-rows-3 text-end">
           <div className="flex items-center gap-5 justify-end">
@@ -16,6 +16,7 @@ const Footer = () => {
               href="https://www.linkedin.com/in/duchieule/"
               target="_blank"
               rel="noopener noreferrer"
+              className="rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400"
             >
               <img
                 src={linkedin}
@@ -27,6 +28,7 @@ const Footer = () => {
               href="https://www.behance.net/duchieule"
               target="_blank"
               rel="noopener noreferrer"
+              className="rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400"
             >
               <img src={behance} className="h-10 sm:h-14" alt="Behance Logo" />
             </a>
@@ -34,6 +36,7 @@ const Footer = () => {
               href="https://github.com/leecamm"
               target="_blank"
               rel="noopener noreferrer"
+              className="rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400"
             >
               <img src={github} className="h-8 sm:h-12" alt="GitHub Logo" />
             </a>
@@ -44,13 +47,14 @@ const Footer = () => {
               href="https://www.freepik.com/free-vector/cute-astronaut-riding-ufo-with-space-banner-cartoon-vector-icon-illustration-science-technology_23446116.htm#page=4&position=37&from_view=author"
               target="_blank"
               rel="noopener noreferrer"
+              className="rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400"
             >
               <span className="font-bold">catalyststuff</span>
             </a>{" "}
             on Freepik
           </p>
           <p className="text-sm md:text-base">
-            Copyright 2022 by Harry Le. All Rights Reserved
+            Copyright {new Date().getFullYear()} by Harry Le. All Rights Reserved
           </p>
         </div>
       </div>
