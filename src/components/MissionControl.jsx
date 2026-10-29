@@ -104,7 +104,7 @@ export default function MissionControl({ ready }) {
                 setHas3d(true);
               };
               mount();
-            }).catch((err) => console.debug("mission control: 3D chunk failed to load, keeping the 2D version", err));
+            }).catch((err) => console.debug("mission control: 3D scene unavailable, keeping the 2D version", err));
           },
         });
         const onPointer = (e) => sceneRef.current?.setPointer(e.clientX / innerWidth - 0.5, e.clientY / innerHeight - 0.5);

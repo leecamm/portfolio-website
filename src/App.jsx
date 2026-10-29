@@ -19,6 +19,7 @@ function App() {
   // flips, which happens after the smoother exists (GSAP wants the smoother created first).
   const [ready, setReady] = useState(false);
   const [launched, setLaunched] = useState(() => !shouldShowPreloader());
+  const [curtain, setCurtain] = useState(() => !launched); // the preloader stays mounted until its wipe ends
 
   useGSAP(() => {
     const mm = gsap.matchMedia();
@@ -30,7 +31,7 @@ function App() {
 
   return (
     <>
-      {!launched && <Preloader onDone={() => setLaunched(true)} />}
+      {curtain && <Preloader onDone={() => setLaunched(true)} onExit={() => setCurtain(false)} />}
       <Navbar ready={ready} />
       <Cursor />
       <div id="smooth-wrapper">

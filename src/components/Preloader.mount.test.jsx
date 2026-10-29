@@ -9,7 +9,7 @@ import Preloader from "./Preloader";
 vi.mock("../lib/gsap", async () => {
   const { useLayoutEffect } = await import("react");
   const timeline = () => {
-    const tl = { fromTo: () => tl, to: () => tl, progress: () => tl };
+    const tl = { fromTo: () => tl, to: () => tl, progress: () => tl, duration: () => 1.95 }; // 3 beats x 0.65 s
     return tl;
   };
   return {
@@ -28,10 +28,10 @@ vi.mock("../lib/gsap", async () => {
 
 const html = document.documentElement;
 
-function mount(onDone, { strict = false } = {}) {
+function mount(onDone, { strict = false, onExit } = {}) {
   const tree = (
     <>
-      <Preloader onDone={onDone} />
+      <Preloader onDone={onDone} onExit={onExit} />
       <nav>
         <a href="#home">home</a>
       </nav>
@@ -55,10 +55,12 @@ afterEach(() => {
 
 it("finishes exactly once when Escape and the timers both fire, even under StrictMode's double run", async () => {
   const onDone = vi.fn();
-  mount(onDone, { strict: true });
+  const onExit = vi.fn();
+  mount(onDone, { strict: true, onExit });
   fireEvent.keyDown(window, { key: "Escape" });
-  await vi.advanceTimersByTimeAsync(5000); // min wait and the 4 s cap both elapse
+  await vi.advanceTimersByTimeAsync(6000); // min wait, the 2.5 s cap and the failsafe all elapse
   expect(onDone).toHaveBeenCalledTimes(1);
+  expect(onExit).toHaveBeenCalledTimes(1);
   expect(gsap.fromTo).toHaveBeenCalledTimes(1);
   expect(ScrollTrigger.refresh).toHaveBeenCalledTimes(1);
 });
@@ -71,7 +73,9 @@ it("locks the page while up, then restores overflow, removes inert and records t
   expect(nav).toHaveAttribute("inert");
   expect(sessionStorage.getItem("launched")).toBeNull();
 
-  await vi.advanceTimersByTimeAsync(1600); // fonts and load are already done in jsdom; min wait elapses
+  await vi.advanceTimersByTimeAsync(1949); // fonts are ready in jsdom; the countdown is still playing
+  expect(gsap.fromTo).not.toHaveBeenCalled();
+  await vi.advanceTimersByTimeAsync(1); // the minimum is the countdown's own length
   expect(onDone).toHaveBeenCalledTimes(1);
   expect(html.style.overflow).toBe("clip");
   expect(nav).not.toHaveAttribute("inert");
@@ -114,4 +118,57 @@ it("still reveals the page when ScrollTrigger.refresh throws", () => {
   expect(() => fireEvent.keyDown(window, { key: "Escape" })).not.toThrow();
   expect(onDone).toHaveBeenCalledTimes(1);
   expect(debug).toHaveBeenCalled();
+});
+
+it("caps the wait at 2.5 s when fonts never settle", async () => {
+  Object.defineProperty(document, "fonts", { configurable: true, value: { ready: new Promise(() => {}) } }); // jsdom has none
+  try {
+    const onDone = vi.fn();
+    mount(onDone);
+    await vi.advanceTimersByTimeAsync(2499);
+    expect(gsap.fromTo).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(1);
+    expect(gsap.fromTo).toHaveBeenCalledTimes(1);
+    expect(onDone).toHaveBeenCalledTimes(1);
+  } finally {
+    delete document.fonts;
+  }
+});
+
+it("starts the hero at 60% of the wipe and unmounts the curtain only at the end", () => {
+  let wipe;
+  gsap.fromTo.mockImplementationOnce((el, from, to) => (wipe = to)); // drive the wipe by hand
+  const onDone = vi.fn();
+  const onExit = vi.fn();
+  mount(onDone, { onExit });
+  fireEvent.keyDown(window, { key: "Escape" });
+  wipe.onUpdate.call({ progress: () => 0.3 });
+  expect(onDone).not.toHaveBeenCalled();
+  wipe.onUpdate.call({ progress: () => 0.6 });
+  wipe.onUpdate.call({ progress: () => 0.8 });
+  expect(onDone).toHaveBeenCalledTimes(1);
+  expect(onExit).not.toHaveBeenCalled();
+  expect(html.style.overflow).toBe("hidden"); // still locked until the curtain is gone
+  wipe.onComplete();
+  expect(onDone).toHaveBeenCalledTimes(1);
+  expect(onExit).toHaveBeenCalledTimes(1);
+  expect(html.style.overflow).toBe("clip");
+});
+
+it("drops the overlay by itself if GSAP never completes the wipe", async () => {
+  gsap.fromTo.mockImplementationOnce(() => {}); // the ticker never runs (suspended rAF)
+  const onDone = vi.fn();
+  const onExit = vi.fn();
+  const { container } = mount(onDone, { onExit });
+  const overlay = container.firstChild;
+  const nav = container.querySelector("nav");
+  await vi.advanceTimersByTimeAsync(3999);
+  expect(onDone).not.toHaveBeenCalled();
+  await vi.advanceTimersByTimeAsync(1); // MAX_MS + 1500
+  expect(onDone).toHaveBeenCalledTimes(1);
+  expect(onExit).toHaveBeenCalledTimes(1);
+  expect(overlay).toHaveStyle({ display: "none" });
+  expect(html.style.overflow).toBe("clip");
+  expect(nav).not.toHaveAttribute("inert");
+  expect(sessionStorage.getItem("launched")).toBe("1");
 });
